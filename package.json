@@ -1,12 +1,32 @@
 {
   "name": "@liquid-labs/git-toolkit",
   "version": "1.0.0-alpha.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Toolkit of git-based tools to examine git repositories.",
+  "files": [
+    "dist/"
+  ],
+  "bin": {
+    "gittk": "dist/gittk.sh"
   },
-  "keywords": [],
+  "scripts": {
+    "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
+    "build": "rollup-bash bash/gittk.sh ./dist/gittk.sh",
+    "watch": "watch 'npm run build' ./bash ./bin",
+    "lint": "catalyst-scripts lint",
+    "lint-fix": "catalyst-scripts lint-fix",
+    "pretest": "TEST_TYPES=unit catalyst-scripts pretest && mkdir -p test-tmp/ && npm run build",
+    "test": "TEST_TYPES=unit catalyst-scripts test",
+    "posttest": "rm -rf test-tmp/",
+    "preversion": "npm test",
+    "version": "npm run build && git add -fA dist",
+    "postversion": "git push && git push --tags",
+    "prepare": "npm run build",
+    "install-clean": "rm -rf package-lock.json node_modules/ && npm install"
+  },
+  "keywords": [
+    "git",
+    "toolkit"
+  ],
   "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
   "license": "UNLICENSED",
   "repository": {
@@ -16,5 +36,12 @@
   "bugs": {
     "url": "https://github.com/Liquid-Labs/git-toolkit/issues"
   },
-  "homepage": "https://github.com/Liquid-Labs/git-toolkit#readme"
+  "homepage": "https://github.com/Liquid-Labs/git-toolkit#readme",
+  "liquidDev": {
+    "orgBase": "git@github.com:Liquid-Labs/Liquid-Labs.git"
+  },
+  "devDependencies": {
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.41",
+    "watch": "^1.0.2"
+  }
 }
