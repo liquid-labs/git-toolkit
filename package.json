@@ -6,11 +6,11 @@
     "dist/"
   ],
   "bin": {
-    "gittk": "dist/gittk.sh"
+    "gtk": "dist/gtk.sh"
   },
   "scripts": {
     "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
-    "build": "rollup-bash bash/gittk.sh ./dist/gittk.sh",
+    "build": "rollup-bash bash/gtk.sh ./dist/gtk.sh",
     "watch": "watch 'npm run build' ./bash ./bin",
     "lint": "catalyst-scripts lint",
     "lint-fix": "catalyst-scripts lint-fix",
