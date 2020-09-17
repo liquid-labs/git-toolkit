@@ -9,19 +9,20 @@
     "gtk": "dist/gtk.sh"
   },
   "scripts": {
-    "prebuild": "mkdir -p ./dist && rm -rf ./dist/*",
-    "build": "rollup-bash bash/gtk.sh ./dist/gtk.sh",
+    "prebuild": "command -v rollup-bash >/dev/null && rm -rf ./dist",
+    "build": "mkdir -p dist && rollup-bash ./bash/gtk.sh ./dist/gtk.sh && rollup-bash ./bash/install.sh ./dist/install.sh",
     "watch": "watch 'npm run build' ./bash ./bin",
     "lint": "catalyst-scripts lint",
     "lint-fix": "catalyst-scripts lint-fix",
     "pretest": "TEST_TYPES=unit catalyst-scripts pretest && mkdir -p test-tmp/ && npm run build",
-    "test": "TEST_TYPES=unit catalyst-scripts test",
+    "test": "catalyst-scripts test",
     "posttest": "rm -rf test-tmp/",
+    "install": "./dist/install.sh",
+    "clean": "rm -rf package-lock.json node_modules/ dist/",
     "preversion": "npm test",
     "version": "npm run build && git add -fA dist",
     "postversion": "git push && git push --tags",
-    "prepare": "npm run build",
-    "install-clean": "rm -rf package-lock.json node_modules/ && npm install"
+    "prepare": "npm run build"
   },
   "keywords": [
     "git",
@@ -41,7 +42,7 @@
     "orgBase": "git@github.com:Liquid-Labs/Liquid-Labs.git"
   },
   "devDependencies": {
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.41",
+    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.42",
     "watch": "^1.0.2"
   }
 }
