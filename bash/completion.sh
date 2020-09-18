@@ -4,7 +4,7 @@
 # TODO: we could generate this from the help docs... make the spec central!
 _gtk() {
   local GLOBAL_ACTIONS="help"
-  local ACTION_GROUPS="hotfixes"
+  local ACTION_GROUPS="hotfixes releases"
 
   local TOKEN COMP_FUNC CUR OPTS PREV WORK_COUNT TOKEN_COUNT
   CUR="${COMP_WORDS[COMP_CWORD]}"
@@ -50,6 +50,11 @@ _gtk() {
   local HOTFIXES_ACTIONS="list"
   local HOTFIXES_GROUPS=""
   eval "$(comp-func-builder 'hotfixes' 'HOTFIXES')"
+
+  # releases group
+  local RELEASES_ACTIONS="latest"
+  local RELEASES_GROUPS=""
+  eval "$(comp-func-builder 'releases' 'RELEASES')"
 
   # Now we've registered all the local and modular completion functions. We'll analyze the token stream to figure out
   # which completion function to call:

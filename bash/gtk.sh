@@ -17,7 +17,7 @@ ACTION_GROUP="${1}"; shift
 # TODO: check if there are other parameters
 
 case "$ACTION_GROUP" in
-  hotfixes)
+  hotfixes|releases)
     gtk-$ACTION_GROUP "$@";;
   *)
     echoerrandexit "Unkown group or global command. Try:\n${bold}${green}gtk help${reset}";;
