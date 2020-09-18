@@ -51,18 +51,31 @@ _gtk() {
   local COMMITS_GROUPS=""
   eval "$(comp-func-builder 'commits' 'COMMITS')"
   comp-gtk-commits-list() {
-    local FORMAT_OPTS="feature-list tag-only"
+    local GRAPH_CONTENT_OPTS='all'
+    local TABLE_CONTENT_OPTS="$GRAPH_CONTENT_OPTS latest-release hotfixes"
+
+    local TABLE_FORMAT_OPTS="feature-list tag-only full"
+    local FORMAT_OPTS="${TABLE_FORMAT_OPTS} graph"
 
     if [[ "$PREV" == "--content" ]]; then
-      OPTS="latest-release hotfixes"
+      if [[ $COMP_LINE == *"--format graph"* ]]; then
+        OPTS="$GRAPH_CONTENT_OPTS"
+      else
+        OPTS="$TABLE_CONTENT_OPTS"
+      fi
     elif [[ "$PREV" == "--format" ]]; then
-      OPTS="${FORMAT_OPTS}"
+      if [[ $COMP_LINE == *"--content "* ]] && [[ $COMP_LINE != *"--content all"* ]]; then
+        OPTS=${TABLE_FORMAT_OPTS}
+      else
+        OPTS="${FORMAT_OPTS}"
+      fi
     elif [[ "$PREV" == "--before-and" ]] || [[ "$PREV" == "--since-and" ]]; then
       OPTS=`git tag` # TODO: use before and since boundaries to limit if set
     else
       local MY_OPTS="--before-and --since-and --content --format"
       local MY_OPT
       for MY_OPT in ${MY_OPTS}; do
+        # include the option if not already included
         [[ $COMP_LINE != *" ${MY_OPT}"* ]] && OPTS="${MY_OPT} ${OPTS}"
       done
     fi

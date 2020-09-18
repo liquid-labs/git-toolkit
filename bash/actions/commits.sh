@@ -26,36 +26,59 @@ gtk-commits-list() {
   fi
 
   local FILTER_OPTS
-  local POST_FILTER
+  local CONTENT_FILTER
+  local LOG_FORMAT="format:'%C(bold 214)%<(7,trunc)%h%C(reset)%x09%C(dim white)%cr%C(reset)%x09%<|(64,trunc)%s%x09%D'"
+  local TABLE_MODE=true
 
-  if [[ -z "${CONTENT}" ]]; then
+  if [[ -z "${CONTENT}" ]] || [[ "all" == $CONTENT ]]; then
     FILTER_OPTS="--decorate-refs='refs/tags/*'"
-    POST_FILTER=""
+    CONTENT_FILTER=""
   elif [[ "latest-release" == "$CONTENT" ]]; then
     FILTER_OPTS="--no-walk --tags --decorate-refs='refs/tags/*'"
-    POST_FILTER="| grep -F 'tag: refs/tags' | head -n 1"
+    CONTENT_FILTER="| grep -F 'tag: refs/tags' | head -n 1"
   elif [[ "hotfixes" == "$CONTENT" ]]; then
     # --no-merges : excludes the workbranch merges
     # --first-parent says to follow the 'master' branch and don't walk into merge branches
     # --min-parent=1 : excludes the initial commit, if any; that's not a hotfix.
     FILTER_OPTS="--no-merges --first-parent --min-parents=1"
-    POST_FILTER="| grep -Fv 'tag: refs/tags'"
+    CONTENT_FILTER="| grep -Fv 'tag: refs/tags'"
   else
     echoerrandexit "No such content type: ${CONTENT}. ${green}Use smart autocomplete or try:\ngtk help list${reset}"
   fi
 
-  POST_FILTER="$POST_FILTER | sed -e 's|tag: refs/tags/||'"
-  [[ "tag-only" != "${FORMAT}" ]] || \
-    POST_FILTER="$POST_FILTER | awk -F \$'\t' '{ print \$4 }' | sed '/^\$/d'"
-  [[ "feature-list" != "${FORMAT}" ]] || \
-    POST_FILTER="$POST_FILTER | awk -F \$'\t' '{ print \$1\"\\t\"\$3 }'"
+  # we use the 'full' decoration to make filtering easy, but we actually want to display the simple tag
+  CONTENT_FILTER="$CONTENT_FILTER | sed -e 's|tag: refs/tags/||'"
+  # now deal with format options
+  [[ -z "$FORMAT" ]] || { \
+    case "${FORMAT}" in
+      full) :;;# nothing to do
+      tag-only)
+        CONTENT_FILTER="$CONTENT_FILTER | awk -F \$'\t' '{ print \$4 }' | sed '/^\$/d'";;
+      feature-list)
+        CONTENT_FILTER="$CONTENT_FILTER | awk -F \$'\t' '{ print \$1\"\\t\"\$3 }'";;
+      graph)
+        if [[ -n $CONTENT ]] && [[ $CONTENT != "all" ]]; then
+          echoerrandexit "Graph output is incompatible with limited content."
+        fi
+        TABLE_MODE='' # bash false
+        FILTER_OPTS="--decorate-refs-exclude='refs/heads/*' --decorate-refs-exclude='*/*/master' --graph --all --decorate=short"
+        LOG_FORMAT="format:'+%C(bold 214)%<(7,trunc)%h%C(reset)+%C(dim white)%>(12,trunc)%cr%C(reset)+%C(white)%s%C(reset)+%C(214)%D%C(reset)'";;
+      *)
+        echoerrandexit "Unknown format option: ${FORMAT}";;
+    esac; }
 
+  local TABLE_OPTS
+  local TABLE_FILTER
+  if [[ -n $TABLE_MODE ]]; then
+    TABLE_OPTS='--no-expand-tabs --decorate=full'
+    TABLE_FILTER="| sed -n 's/  */ /gp' ${CONTENT_FILTER} | column -s $'\t' -t"
+  fi
   # TODO: implement '--no-color|-C' (from global option?)
   # --decorate=full : says to print the full refspec with '%d' so we can filter it (the tags) out
   # %x09 : a tab
   # TODO: would love to add a header, but don't see a way to add that to the 'git log' and 'column' doesn't work well with 'git log'. Not sure why but adding:
   # { echo -e "Hash\tWhen\tMessage\tRef";... ; } | column -s $'\t' -t
   # generally does not format rightand outputs 'column: line too long'. Different 'expand-tabs' did not seem to help.
-  # TODO: can we factor out the eval? It's necessary to get the (possible) '|' in 'POST_FILTER' to get treated as a bash operator rather than a literal pipe.
-  eval "git log $FILTER_OPTS --color --no-expand-tabs --decorate=full --pretty=format:'%C(bold 214)%<(7,trunc)%h%C(reset)%x09%C(dim white)%cr%C(reset)%x09%<|(64,trunc)%s%x09%D' ${RANGE} -- | sed -n 's/  */ /gp' ${POST_FILTER} | column -s $'\t' -t"
+  # TODO: can we factor out the eval? It's necessary to get the (possible) '|' in 'CONTENT_FILTER' to get treated as a bash operator rather than a literal pipe.
+  eval "git log $FILTER_OPTS --color ${TABLE_OPTS} --pretty=${LOG_FORMAT} ${RANGE} -- ${TABLE_FILTER}"
 }
