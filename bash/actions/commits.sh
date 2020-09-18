@@ -9,7 +9,7 @@ function gtk-commits() {
 }
 
 gtk-commits-list() {
-  eval "$(setSimpleOptions BEFORE_AND= SINCE_AND= CONTENT= -- "$@")"
+  eval "$(setSimpleOptions BEFORE_AND= SINCE_AND= CONTENT= TAG_ONLY:T -- "$@")"
 
   local RANGE="" # default to all time
   if [[ -n "$BEFORE_AND" ]] || [[ -n "$SINCE_AND" ]]; then
@@ -44,6 +44,10 @@ gtk-commits-list() {
     echoerrandexit "No such content type: ${CONTENT}. ${green}Use smart autocomplete or try:\ngtk help list${reset}"
   fi
 
+  POST_FILTER="$POST_FILTER | sed -e 's|tag: refs/tags/||'"
+  [[ -z "${TAG_ONLY}" ]] || \
+    POST_FILTER="$POST_FILTER | awk -F \$'\t' '{print \$4}' | sed '/^\$/d'"
+
   # TODO: implement '--no-color|-C' (from global option?)
   # --decorate=full : says to print the full refspec with '%d' so we can filter it (the tags) out
   # %x09 : a tab
@@ -51,5 +55,5 @@ gtk-commits-list() {
   # { echo -e "Hash\tWhen\tMessage\tRef";... ; } | column -s $'\t' -t
   # generally does not format rightand outputs 'column: line too long'. Different 'expand-tabs' did not seem to help.
   # TODO: can we factor out the eval? It's necessary to get the (possible) '|' in 'POST_FILTER' to get treated as a bash operator rather than a literal pipe.
-  eval "git log $FILTER_OPTS --color --no-expand-tabs --decorate=full --pretty=format:'%C(bold 214)%<(7,trunc)%h%C(reset)%x09%C(dim white)%cr%C(reset)%x09%<|(64,trunc)%s%x09%d' ${RANGE} -- | sed -n 's/  */ /gp' ${POST_FILTER} | column -s $'\t' -t"
+  eval "git log $FILTER_OPTS --color --no-expand-tabs --decorate=full --pretty=format:'%C(bold 214)%<(7,trunc)%h%C(reset)%x09%C(dim white)%cr%C(reset)%x09%<|(64,trunc)%s%x09%D' ${RANGE} -- | sed -n 's/  */ /gp' ${POST_FILTER} | column -s $'\t' -t"
 }
