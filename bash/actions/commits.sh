@@ -9,7 +9,7 @@ function gtk-commits() {
 }
 
 gtk-commits-list() {
-  eval "$(setSimpleOptions BEFORE_AND= SINCE_AND= CONTENT= TAG_ONLY:T -- "$@")"
+  eval "$(setSimpleOptions BEFORE_AND= SINCE_AND= CONTENT= FORMAT= -- "$@")"
 
   local RANGE="" # default to all time
   if [[ -n "$BEFORE_AND" ]] || [[ -n "$SINCE_AND" ]]; then
@@ -45,8 +45,10 @@ gtk-commits-list() {
   fi
 
   POST_FILTER="$POST_FILTER | sed -e 's|tag: refs/tags/||'"
-  [[ -z "${TAG_ONLY}" ]] || \
-    POST_FILTER="$POST_FILTER | awk -F \$'\t' '{print \$4}' | sed '/^\$/d'"
+  [[ "tag-only" != "${FORMAT}" ]] || \
+    POST_FILTER="$POST_FILTER | awk -F \$'\t' '{ print \$4 }' | sed '/^\$/d'"
+  [[ "feature-list" != "${FORMAT}" ]] || \
+    POST_FILTER="$POST_FILTER | awk -F \$'\t' '{ print \$1\"\\t\"\$3 }'"
 
   # TODO: implement '--no-color|-C' (from global option?)
   # --decorate=full : says to print the full refspec with '%d' so we can filter it (the tags) out
