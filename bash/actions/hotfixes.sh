@@ -9,6 +9,12 @@ function gtk-hotfixes() {
 }
 
 gtk-hotfixes-list() {
-  # TODO: implement '--no-color' (from global option?)
-  git log --no-merges --first-parent --pretty=oneline --decorate=full --min-parents=1 --color | grep --color=always -Fv 'tag: refs/tags'
+  local SINCE="${1:-}"
+
+  local RANGE=""
+  if [[ -n "$SINCE" ]]; then
+    RANGE="$SINCE...HEAD"
+  fi
+  # TODO: implement '--no-color|-C' (from global option?)
+  git log --no-merges --first-parent --pretty=oneline --decorate=full --min-parents=1 --color $RANGE | grep --color=always -Fv 'tag: refs/tags'
 }
