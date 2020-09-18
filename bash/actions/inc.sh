@@ -1,2 +1,1 @@
-source ./hotfixes.sh
-source ./releases.sh
+source ./commits.sh

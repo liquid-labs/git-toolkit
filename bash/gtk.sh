@@ -16,9 +16,8 @@ ACTION_GROUP="${1}"; shift
 
 # TODO: check if there are other parameters
 
-case "$ACTION_GROUP" in
-  hotfixes|releases)
-    gtk-$ACTION_GROUP "$@";;
-  *)
-    echoerrandexit "Unkown group or global command. Try:\n${bold}${green}gtk help${reset}";;
-esac
+if [[ $(type -t "gtk-${ACTION_GROUP}" || echo '') == 'function' ]]; then
+  gtk-${ACTION_GROUP} "$@"
+else
+  echoerrandexit "No such group or global command: ${bold}${ACTION_GROUP}${reset}. Try:\n${bold}${green}gtk help${reset}"
+fi

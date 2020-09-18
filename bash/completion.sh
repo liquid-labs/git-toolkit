@@ -4,7 +4,7 @@
 # TODO: we could generate this from the help docs... make the spec central!
 _gtk() {
   local GLOBAL_ACTIONS="help"
-  local ACTION_GROUPS="hotfixes releases"
+  local ACTION_GROUPS="commits"
 
   local TOKEN COMP_FUNC CUR OPTS PREV WORK_COUNT TOKEN_COUNT
   CUR="${COMP_WORDS[COMP_CWORD]}"
@@ -46,15 +46,25 @@ _gtk() {
     done
   }
 
-  # hotfixes group
-  local HOTFIXES_ACTIONS="list"
-  local HOTFIXES_GROUPS=""
-  eval "$(comp-func-builder 'hotfixes' 'HOTFIXES')"
+  # commits group
+  local COMMITS_ACTIONS="list"
+  local COMMITS_GROUPS=""
+  eval "$(comp-func-builder 'commits' 'COMMITS')"
+  comp-gtk-commits-list() {
+    if [[ "$PREV" == "--content" ]]; then
+      OPTS="latest-release hotfixes"
+    elif [[ "$PREV" == "--before-and" ]] || [[ "$PREV" == "--since-and" ]]; then
+      OPTS=`git tag` # TODO: use before and since boundaries to limit if set
+    else
+      local MY_OPTS="--before-and --since-and --content"
+      local MY_OPT
+      for MY_OPT in ${MY_OPTS}; do
+        [[ $COMP_LINE != *" ${MY_OPT}"* ]] && OPTS="${MY_OPT} ${OPTS}"
+      done
+    fi
 
-  # releases group
-  local RELEASES_ACTIONS="latest"
-  local RELEASES_GROUPS=""
-  eval "$(comp-func-builder 'releases' 'RELEASES')"
+    std-reply
+  }
 
   # Now we've registered all the local and modular completion functions. We'll analyze the token stream to figure out
   # which completion function to call:
