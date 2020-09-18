@@ -29,11 +29,11 @@ gtk-commits-list() {
   local POST_FILTER
 
   if [[ -z "${CONTENT}" ]]; then
-    FILTER_OPTS=""
+    FILTER_OPTS="--decorate-refs='refs/tags/*'"
     POST_FILTER=""
   elif [[ "latest-release" == "$CONTENT" ]]; then
-    FILTER_OPTS="--no-merges --first-parent --min-parents=1"
-    POST_FILTER="| grep -F 'tag: refs/tags' | tail -n 1"
+    FILTER_OPTS="--no-walk --tags --decorate-refs='refs/tags/*'"
+    POST_FILTER="| grep -F 'tag: refs/tags' | head -n 1"
   elif [[ "hotfixes" == "$CONTENT" ]]; then
     # --no-merges : excludes the workbranch merges
     # --first-parent says to follow the 'master' branch and don't walk into merge branches
@@ -50,5 +50,6 @@ gtk-commits-list() {
   # TODO: would love to add a header, but don't see a way to add that to the 'git log' and 'column' doesn't work well with 'git log'. Not sure why but adding:
   # { echo -e "Hash\tWhen\tMessage\tRef";... ; } | column -s $'\t' -t
   # generally does not format rightand outputs 'column: line too long'. Different 'expand-tabs' did not seem to help.
+  # TODO: can we factor out the eval? It's necessary to get the (possible) '|' in 'POST_FILTER' to get treated as a bash operator rather than a literal pipe.
   eval "git log $FILTER_OPTS --color --no-expand-tabs --decorate=full --pretty=format:'%C(bold 214)%<(7,trunc)%h%C(reset)%x09%C(dim white)%cr%C(reset)%x09%<|(64,trunc)%s%x09%d' ${RANGE} -- | sed -n 's/  */ /gp' ${POST_FILTER} | column -s $'\t' -t"
 }
