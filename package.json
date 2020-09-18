@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@liquid-labs/bash-toolkit": "^1.0.0-alpha.42",
+    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.28",
     "watch": "^1.0.2"
   }
 }
