@@ -1,0 +1,24 @@
+
+Gather the necessary release certifications in the release branch. This includes:
+Generate release summary.
+All test reports as appropriate for the project.
+A unit test report. If any unit tests are failing or skipped, these exceptions must be noted in an `exceptions.txt` file. This file must be approved by the Release Manager.
+Any integration or other test...
+
+To find latest release use:
+
+gtk commits list --latest-release
+
+To check for hotfix commits:
+
+gtk commits list --hotfixes <commitish since>
+
+To check for feature merges:
+
+gtk commits list --content feature-list [--before-and <commitish>] [--since-and <commitish>
+
+Nice, compact graph: (for ref)
+
+gtk commits --format graph [--before-and <commitish>] [--since-and <commitish>]
+
+gtk -> release-audit -> liq ???
