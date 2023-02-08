@@ -1,4 +1,10 @@
-node_modules/
+/.test-marker
+/.lint-marker
+/node_modules
+/yalc.lock
+/.yalc
+/dist
 /test-staging
-/dist/
-/coverage/
+/coverage
+/example-implied.md
+/example.md

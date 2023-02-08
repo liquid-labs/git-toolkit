@@ -2,27 +2,18 @@
   "name": "@liquid-labs/git-toolkit",
   "version": "1.0.0-alpha.1",
   "description": "Toolkit of git-based tools to examine git repositories.",
+  "main": "dist/git-toolkit.js",
   "files": [
     "dist/"
   ],
-  "bin": {
-    "gtk": "dist/gtk.sh"
-  },
   "scripts": {
-    "prebuild": "command -v rollup-bash >/dev/null && rm -rf ./dist",
-    "build": "mkdir -p dist && rollup-bash ./bash/gtk.sh ./dist/gtk.sh && rollup-bash ./bash/install.sh ./dist/install.sh",
-    "watch": "watch 'npm run build' ./bash ./bin",
-    "lint": "catalyst-scripts lint",
-    "lint-fix": "catalyst-scripts lint-fix",
-    "pretest": "TEST_TYPES=unit catalyst-scripts pretest && mkdir -p test-tmp/ && npm run build",
-    "test": "catalyst-scripts test",
-    "posttest": "rm -rf test-tmp/",
-    "install": "./dist/install.sh",
-    "clean": "rm -rf package-lock.json node_modules/ dist/",
-    "preversion": "npm test",
-    "version": "npm run build && git add -fA dist",
-    "postversion": "git push && git push --tags",
-    "prepare": "npm run build"
+    "build": "make build",
+    "lint": "make lint",
+    "lint:fix": "make lint-fix",
+    "test": "make test",
+    "preversion": "npm run qa",
+    "prepare": "npm run build",
+    "qa": "make qa"
   },
   "keywords": [
     "git",
@@ -41,9 +32,15 @@
   "liquidDev": {
     "orgBase": "git@github.com:Liquid-Labs/Liquid-Labs.git"
   },
+  "liq": {
+    "packageType": "node|lib",
+    "tags": []
+  },
   "devDependencies": {
-    "@liquid-labs/bash-toolkit": "^1.0.0-alpha.42",
-    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.28",
-    "watch": "^1.0.2"
+    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.57",
+    "http-errors": "^2.0.0"
+  },
+  "dependencies": {
+    "shelljs": "^0.8.5"
   }
 }
