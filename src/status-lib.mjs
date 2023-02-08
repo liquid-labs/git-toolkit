@@ -14,7 +14,7 @@ const tryExec = (cmd, { msg = '', httpStatus = 500 } = {}) => {
 }
 
 const verifyClean = ({ projectPath, reporter }) => {
-  const [ originRemote, mainBranch ] = determineOriginAndMain({ projectPath })
+  const [originRemote, mainBranch] = determineOriginAndMain({ projectPath })
 
   // Update main branch so we can check we're in sync
   reporter?.push(`Checking ${originRemote} HEAD is up-to-date...`)
