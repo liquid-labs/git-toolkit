@@ -1,26 +1,25 @@
 import createError from 'http-errors'
 import shell from 'shelljs'
 
+import { tryExec } from './lib/try-exec'
+
 const KNOWN_ORIGINS = ['origin', 'upstream']
 const KNOWN_MAINS = ['main', 'master']
 
 const determineCurrentBranch = ({ projectPath, reporter }) => {
   reporter?.push('Fetching current branch name...')
-  const branchResult = shell.exec(`cd '${projectPath}' && git branch | grep '*' | cut -d' ' -f2`)
-  if (branchResult.code !== 0) { throw createError.InternalServerError(`Could not determnie current branch for git repo at '${projectPath}'.`) }
+  const branchResult = tryExec(`cd '${projectPath}' && git branch | grep '*' | cut -d' ' -f2`,
+    { msg: `Could not determnie current branch for git repo at '${projectPath}'.` })
 
   return branchResult.stdout.trim()
 }
 
 const determineOriginAndMain = ({ projectPath, reporter }) => {
   reporter?.push('Fetching latest origin data...')
-  const fetchResult = shell.exec(`cd ${projectPath} && git fetch -p`)
-
-  if (fetchResult.code !== 0) { throw createError(`'git fetch -p' failed at '${projectPath}': ${fetchResult.stderr}.`) }
+  tryExec(`cd ${projectPath} && git fetch -p`)
 
   reporter?.push('Checking remote branches...')
-  const remoteBranchQuery = shell.exec(`cd ${projectPath} && git branch -r`)
-  if (remoteBranchQuery.code !== 0) throw createError(`Could not list remote branches: ${remoteBranchQuery.stderr}`)
+  const remoteBranchQuery = tryExec(`cd ${projectPath} && git branch -r`, { msg: `Could not list remote branches.` })
   const remoteBranches = remoteBranchQuery.split('\n').map((r) => r.trim().split('/'))
 
   let origin, main

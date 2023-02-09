@@ -8,5 +8,5 @@ describe('verifyClean', () => {
     ['repo_a_clone', 'on not-main branch'],
     ['repo_a_clone_2', 'on main branch']
   ])("'%s' %s is clean", (repo, branch) =>
-    expect(() => verifyClean({ projectPath : fsPath.join('src', 'test', 'data', repo) })).not.toThrow())
+    expect(() => verifyClean({ projectPath : fsPath.join('test-staging', 'data', repo) })).not.toThrow())
 })
