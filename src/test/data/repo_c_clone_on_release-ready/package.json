@@ -1,0 +1,16 @@
+{
+  "name": "repo_c",
+  "version": "1.0.0-alpha.1",
+  "description": "test project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test -f a-file.txt",
+    "qa":  "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "file://src/tast/data/repo_c"
+  },
+  "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
+  "license": "UNLICENSED"
+}
