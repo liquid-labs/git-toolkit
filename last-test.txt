@@ -1,0 +1,18 @@
+PASS test-staging/test/branch-and-remotes-lib.test.js
+PASS test-staging/test/status-lib.test.js
+----------------------------|---------|----------|---------|---------|-------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------------|---------|----------|---------|---------|-------------------
+All files                   |   63.88 |    52.38 |   71.42 |   69.23 |                   
+ src                        |   65.57 |    52.63 |   66.66 |   69.64 |                   
+  branch-and-remotes-lib.js |    93.1 |    79.41 |     100 |   92.85 | 31,38             
+  status-lib.mjs            |   40.62 |    13.04 |   33.33 |   46.42 | 18-30,47-58       
+ src/lib                    |   54.54 |       50 |     100 |   66.66 |                   
+  try-exec.mjs              |   54.54 |       50 |     100 |   66.66 | 6-9               
+----------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 2 passed, 2 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        1.535 s, estimated 2 s
+Ran all test suites matching /.\/test-staging/i.

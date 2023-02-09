@@ -1,52 +1,67 @@
+ifneq (grouped-target, $(findstring grouped-target,$(.FEATURES)))
+ERROR:=$(error This version of make does not support required 'grouped-target' (4.3+).)
+endif
+
 .DELETE_ON_ERROR:
-.PHONY: all build lint lint-fix qa test
+.PHONY: all build clean-test lint lint-fix qa test test-repos-live test-repos-commitable
 
 default: build
 
 CATALYST_SCRIPTS:=npx catalyst-scripts
 
-GIT_TOOLKIT_SRC:=src
-GIT_TOOLKIT_FILES:=$(shell find $(GIT_TOOLKIT_SRC) \( -name "*.js" -o -name "*.mjs" \) -not -path "*/test/*" -not -name "*.test.js")
-GIT_TOOLKIT_ALL_FILES:=$(shell find $(GIT_TOOLKIT_SRC) \( -name "*.js" -o -name "*.mjs" \))
-GIT_TOOLKIT_TEST_SRC_FILES:=$(shell find $(GIT_TOOLKIT_SRC) -name "*.js")
-GIT_TOOLKIT_TEST_BUILT_FILES:=$(patsubst $(GIT_TOOLKIT_SRC)/%, test-staging/%, $(GIT_TOOLKIT_TEST_SRC_FILES))
-#GIT_TOOLKIT_TEST_SRC_DATA:=$(shell find $(GIT_TOOLKIT_SRC) -path "*/test/data/*" -type f)
-#GIT_TOOLKIT_TEST_BUILT_DATA:=$(patsubst $(GIT_TOOLKIT_SRC)/%, test-staging/%, $(GIT_TOOLKIT_TEST_SRC_DATA))
-GIT_TOOLKIT:=dist/liq-projects.js
+LIB_SRC:=src
+LIB_FILES:=$(shell find $(LIB_SRC) \( -name "*.js" -o -name "*.mjs" \) -not -path "*/test/*" -not -name "*.test.js")
+ALL_SRC_FILES:=$(shell find $(LIB_SRC) \( -name "*.js" -o -name "*.mjs" \))
 
-BUILD_TARGETS:=$(GIT_TOOLKIT)
+TEST_STAGING=test-staging
+TEST_SRC_FILES:=$(shell find $(LIB_SRC) -name "*.js")
+TEST_BUILT_FILES:=$(patsubst $(LIB_SRC)/%, $(TEST_STAGING)/%, $(TEST_SRC_FILES))
+LIBRARY:=dist/liq-projects.js
+
+TEST_DATA_SRC:=src/test/data
+TEST_DATA_BUILT_SRC=$(TEST_STAGING)/data
+TEST_DATA_FILES:=$(shell find $(TEST_DATA_SRC) -type f)
+TEST_DATA_BUILT_FILES:=$(patsubst $(TEST_DATA_SRC)/%, $(TEST_DATA_BUILT_SRC)/%, $(TEST_DATA_FILES))
+
+BUILD_TARGETS:=$(LIBRARY)
 
 # build rules
 build: $(BUILD_TARGETS)
 
 all: build
 
-$(GIT_TOOLKIT): package.json $(GIT_TOOLKIT_FILES)
-	JS_SRC=$(GIT_TOOLKIT_SRC) $(CATALYST_SCRIPTS) build
+$(LIBRARY): package.json $(LIB_FILES)
+	JS_SRC=$(LIB_SRC) $(CATALYST_SCRIPTS) build
 
 # test
-#$(GIT_TOOLKIT_TEST_BUILT_DATA): test-staging/%: $(GIT_TOOLKIT_SRC)/%
-#	@echo "Copying test data..."
-#	@mkdir -p $(dir $@)
-#	@cp $< $@
+$(TEST_DATA_BUILT_FILES) &: $(TEST_DATA_FILES)
+	rm -rf $(TEST_DATA_BUILT_SRC)/*
+	mkdir -p $(TEST_DATA_BUILT_SRC)
+	cp -rf $(TEST_DATA_SRC)/* $(TEST_DATA_BUILT_SRC)
+	# we 'cp' so that when make compares the test-staging repos to the src repos, it doesn't see a lot of missing files
+	for DOT_GIT in $$(find $(TEST_DATA_BUILT_SRC) -name 'dot-git'); do cp -r $$DOT_GIT $$(dirname $$DOT_GIT)/.git; done
 
-$(GIT_TOOLKIT_TEST_BUILT_FILES) &: $(GIT_TOOLKIT_ALL_FILES)
-	JS_SRC=$(GIT_TOOLKIT_SRC) $(CATALYST_SCRIPTS) pretest
+$(TEST_BUILT_FILES)&: $(ALL_SRC_FILES)
+	JS_SRC=$(LIB_SRC) $(CATALYST_SCRIPTS) pretest
 
-.test-marker: $(GIT_TOOLKIT_TEST_BUILT_FILES) # $(GIT_TOOLKIT_TEST_BUILT_DATA)
-	JS_SRC=test-staging $(CATALYST_SCRIPTS) test
-	touch $@
+last-test.txt: $(TEST_BUILT_FILES) $(TEST_DATA_BUILT_FILES)
+	JS_SRC=$(TEST_STAGING) $(CATALYST_SCRIPTS) test 2>&1 | tee last-test.txt
 
-test: .test-marker
+test: last-test.txt
 
 # lint rules
-.lint-marker: $(GIT_TOOLKIT_ALL_FILES)
-	JS_LINT_TARGET=$(GIT_TOOLKIT_SRC) $(CATALYST_SCRIPTS) lint
-	touch $@
+last-lint.txt: $(ALL_SRC_FILES)
+	JS_LINT_TARGET=$(LIB_SRC) $(CATALYST_SCRIPTS) lint | tee last-lint.txt
 
-lint: .lint-marker
+lint: last-lint.txt
 
 lint-fix:
-	JS_LINT_TARGET=$(GIT_TOOLKIT_SRC) $(CATALYST_SCRIPTS) lint-fix
+	JS_LINT_TARGET=$(LIB_SRC) $(CATALYST_SCRIPTS) lint-fix
 
 qa: test lint
+
+test-repos-live:
+	for DG in $$(find src/test/data -name dot-git); do mv $$DG $$(dirname $$DG)/.git; done
+
+test-repos-commitable:
+	for DG in $$(find src/test/data -name .git); do mv $$DG $$(dirname $$DG)/dot-git; done
