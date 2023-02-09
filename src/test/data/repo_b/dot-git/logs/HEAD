@@ -1,2 +1,3 @@
 0000000000000000000000000000000000000000 944b9374a43528d09e09a32361cd2f664c6822df Zane Rockenbaugh <zane@liquid-labs.com> 1675823495 -0600	commit (initial): pass the bar
 944b9374a43528d09e09a32361cd2f664c6822df 944b9374a43528d09e09a32361cd2f664c6822df Zane Rockenbaugh <zane@liquid-labs.com> 1675823511 -0600	checkout: moving from main to work-branch
+944b9374a43528d09e09a32361cd2f664c6822df f0d787514e6321419cb200515e77099887a1fdf9 Zane Rockenbaugh <zane@liquid-labs.com> 1675972344 -0600	commit: ignore 'dot-git' in live repos
