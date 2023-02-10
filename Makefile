@@ -44,14 +44,23 @@ $(TEST_DATA_BUILT_FILES) &: $(TEST_DATA_FILES)
 $(TEST_BUILT_FILES)&: $(ALL_SRC_FILES)
 	JS_SRC=$(LIB_SRC) $(CATALYST_SCRIPTS) pretest
 
-last-test.txt: $(TEST_BUILT_FILES) $(TEST_DATA_BUILT_FILES)
-	JS_SRC=$(TEST_STAGING) $(CATALYST_SCRIPTS) test 2>&1 | tee last-test.txt
+last-test.txt: $(TEST_BUILT_FILES) # $(TEST_DATA_BUILT_FILES)
+	# JS_SRC=$(TEST_STAGING) $(CATALYST_SCRIPTS) test | tee last-test.txt
+	( \
+		set -e; \
+		set -o pipefail; \
+		JS_SRC=$(TEST_STAGING) $(CATALYST_SCRIPTS) test 2>&1 | tee last-test.txt; \
+	)
 
 test: last-test.txt
 
 # lint rules
 last-lint.txt: $(ALL_SRC_FILES)
-	JS_LINT_TARGET=$(LIB_SRC) $(CATALYST_SCRIPTS) lint | tee last-lint.txt
+	( \
+		set -e; \
+		set -o pipefail; \
+		JS_LINT_TARGET=$(LIB_SRC) $(CATALYST_SCRIPTS) lint | tee last-lint.txt; \
+	)
 
 lint: last-lint.txt
 
