@@ -1,5 +1,4 @@
 import createError from 'http-errors'
-import shell from 'shelljs'
 
 import { determineOriginAndMain } from './branch-and-remotes-lib'
 import { tryExec } from './lib/try-exec'
@@ -10,7 +9,7 @@ import { tryExec } from './lib/try-exec'
 const verifyClean = ({ projectPath, reporter }) => {
   reporter?.push('Checking working directory is clean...')
   const cleanResult = tryExec(`cd '${projectPath}' && git status --porcelain`,
-    { msg: `Could not execute 'git status' in dir '${projectPath}'.` })
+    { msg : `Could not execute 'git status' in dir '${projectPath}'.` })
   if (cleanResult.stdout.length > 0) { throw createError.BadRequest(`git repo at '${projectPath}' is not clean.`) }
 }
 
@@ -31,8 +30,8 @@ const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
 }
 
 /**
- * Verifies that the repo is ready for release by verifyirg we are on the main or release branch, the repo is clean, 
- * the main branch is up to date with the origin remote and vice-a-versa, and there is a package 'qa' script that 
+ * Verifies that the repo is ready for release by verifyirg we are on the main or release branch, the repo is clean,
+ * the main branch is up to date with the origin remote and vice-a-versa, and there is a package 'qa' script that
  * passes.
  */
 const verifyReadyForRelease = ({

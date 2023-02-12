@@ -20,7 +20,7 @@ const branchBaseName = () => {
 const determineCurrentBranch = ({ projectPath, reporter }) => {
   reporter?.push('Fetching current branch name...')
   const branchResult = tryExec(`cd '${projectPath}' && git branch | grep '*' | cut -d' ' -f2`,
-    { msg: `Could not determnie current branch for git repo at '${projectPath}'.` })
+    { msg : `Could not determnie current branch for git repo at '${projectPath}'.` })
 
   return branchResult.stdout.trim()
 }
@@ -30,7 +30,7 @@ const determineOriginAndMain = ({ projectPath, reporter }) => {
   tryExec(`cd ${projectPath} && git fetch -p`)
 
   reporter?.push('Checking remote branches...')
-  const remoteBranchQuery = tryExec(`cd ${projectPath} && git branch -r`, { msg: `Could not list remote branches.` })
+  const remoteBranchQuery = tryExec(`cd ${projectPath} && git branch -r`, { msg : 'Could not list remote branches.' })
   const remoteBranches = remoteBranchQuery.split('\n').map((r) => r.trim().split('/'))
 
   let origin, main
@@ -57,4 +57,4 @@ const determineOriginAndMain = ({ projectPath, reporter }) => {
 
 const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
 
-export {   branchBaseName, determineCurrentBranch, determineOriginAndMain, releaseBranchName }
+export { branchBaseName, determineCurrentBranch, determineOriginAndMain, releaseBranchName }
