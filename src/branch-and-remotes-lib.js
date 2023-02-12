@@ -57,4 +57,6 @@ const determineOriginAndMain = ({ projectPath, reporter }) => {
 
 const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
 
-export { branchBaseName, determineCurrentBranch, determineOriginAndMain, releaseBranchName }
+const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerCase()
+
+export { branchBaseName, determineCurrentBranch, determineOriginAndMain, releaseBranchName, workBranchName }
