@@ -6,6 +6,17 @@ import { tryExec } from './lib/try-exec'
 const KNOWN_ORIGINS = ['origin', 'upstream']
 const KNOWN_MAINS = ['main', 'master']
 
+const branchBaseName = () => {
+  const now = new Date()
+  const dateBit = now.getUTCFullYear()
+    + (now.getUTCMonth() + '').padStart(2, '0')
+    + (now.getUTCDate() + '').padStart(2, '0')
+  const userId = shell.exec('git config user.email')
+  if (userId.code !== 0) throw createError.InternalServerError('Failed to identify git user for branch name.')
+
+  return dateBit + '-' + userId.stdout.trim()
+}
+
 const determineCurrentBranch = ({ projectPath, reporter }) => {
   reporter?.push('Fetching current branch name...')
   const branchResult = tryExec(`cd '${projectPath}' && git branch | grep '*' | cut -d' ' -f2`,
@@ -44,4 +55,6 @@ const determineOriginAndMain = ({ projectPath, reporter }) => {
   return [origin, main]
 }
 
-export { determineCurrentBranch, determineOriginAndMain }
+const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
+
+export {   branchBaseName, determineCurrentBranch, determineOriginAndMain, releaseBranchName }
