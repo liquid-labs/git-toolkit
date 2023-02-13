@@ -41,7 +41,7 @@
     "http-errors": "^2.0.0"
   },
   "dependencies": {
-    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.1",
+    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.2",
     "shelljs": "^0.8.5"
   }
 }

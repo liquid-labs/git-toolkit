@@ -1,7 +1,7 @@
 /* globals describe expect test */
 import * as fsPath from 'node:path'
 
-import { determineCurrentBranch, determineOriginAndMain, hasBranch } from '../branch-and-remotes-lib'
+import { determineCurrentBranch, determineOriginAndMain, hasBranch, hasRemote } from '../branch-and-remotes-lib'
 
 describe('determineCurrentBranch', () => {
   test.each([
@@ -23,7 +23,18 @@ describe('hasBranch', () => {
   test.each([
     ['repo_a', 'main', true],
     ['repo_a', 'bar', true],
-    ['repo_a', 'foo', false],
+    ['repo_a', 'foo', false]
   ])("'%s' has branch '%s' => %p", (repo, branch, present) =>
     expect(hasBranch({ branch, projectPath: fsPath.join('test-staging', 'data', repo) })).toBe(present))
+})
+
+describe('hasRemote', () => {
+  test.each([
+    ['repo_a', 'origin', false],
+    ['repo_a_clone', 'origin', true],
+    ['repo_a_clone_2', 'origin', false],
+    ['repo_a_clone_2', 'upstream', true],
+    ['repo_a_clone_2', 'coworker', true]
+  ])("'%s' has remote '%s' => %p", (repo, remote, present) =>
+    expect(hasRemote({ remote, projectPath: fsPath.join('test-staging', 'data', repo) })).toBe(present))
 })

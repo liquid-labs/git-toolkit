@@ -11,3 +11,6 @@
 [branch "main"]
 	remote = upstream
 	merge = refs/heads/main
+[remote "coworker"]
+	url = file://../repo_a_clone
+	fetch = +refs/heads/*:refs/remotes/coworker/*
