@@ -37,4 +37,13 @@ describe('hasRemote', () => {
     ['repo_a_clone_2', 'coworker', true]
   ])("'%s' has remote '%s' => %p", (repo, remote, present) =>
     expect(hasRemote({ remote, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
+
+  test.each([
+    ['repo_a', 'origin', 'repo_a(?:\\s|$)', false],
+    ['repo_a_clone', 'origin', 'repo_a(?:\\s|$)', true],
+    ['repo_a_clone_2', 'origin', 'repo_a(?:\\s|$)', false],
+    ['repo_a_clone_2', 'upstream', 'repo_a(?:\\s|$)', true],
+    ['repo_a_clone_2', 'coworker', 'repo_a_clone(?:\\s|$)', true]
+  ])("'%s' has remote '%s' with url matching %p => %p", (repo, remote, urlMatch, present) =>
+    expect(hasRemote({ remote, projectPath : fsPath.join('test-staging', 'data', repo), urlMatch })).toBe(present))
 })

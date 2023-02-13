@@ -61,10 +61,16 @@ const hasBranch = ({ branch, projectPath, reporter }) => {
   return result.stdout.trim().length > 0
 }
 
-const hasRemote = ({ projectPath, remote, reporter }) => {
+const hasRemote = ({ projectPath, remote, reporter, urlMatch }) => {
   reporter?.push(`Checking for local remote '${remote}'...`)
-  const result = tryExec(`cd '${projectPath}' && git remote | grep -E '^\\s*${remote}\\s*$' || true`)
-  return result.stdout.trim().length > 0
+  const result = tryExec(`cd '${projectPath}' && git remote -v | grep -E '^\\s*${remote}(?:\\s+|$)' || true`)
+  const trimmedResult = result.stdout.trim()
+
+  if (trimmedResult.length === 0) return false
+
+  return urlMatch === undefined
+    ? true
+    : !!trimmedResult.match(new RegExp(urlMatch))
 }
 
 const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
