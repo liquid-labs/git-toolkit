@@ -55,8 +55,21 @@ const determineOriginAndMain = ({ projectPath, reporter }) => {
   return [origin, main]
 }
 
+const hasBranch = ({ branch, projectPath, reporter }) => {
+  reporter?.push(`Checking for local branch '${branch}'...`)
+  const result = tryExec(`cd ${projectPath} && git branch | grep -E '^[*]?\\s+${branch}\\s*$' || true`)
+  return result.stdout.trim().length > 0
+}
+
 const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
 
 const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerCase()
 
-export { branchBaseName, determineCurrentBranch, determineOriginAndMain, releaseBranchName, workBranchName }
+export { 
+  branchBaseName, 
+  determineCurrentBranch, 
+  determineOriginAndMain, 
+  hasBranch,
+  releaseBranchName, 
+  workBranchName 
+}
