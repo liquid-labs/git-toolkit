@@ -1,7 +1,8 @@
 import createError from 'http-errors'
 
+import { tryExec } from '@liquid-labs/shell-toolkit'
+
 import { determineOriginAndMain } from './branch-and-remotes-lib'
-import { tryExec } from './lib/try-exec'
 
 /**
  * Verifies the current branch is clean.

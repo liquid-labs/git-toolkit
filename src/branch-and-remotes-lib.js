@@ -1,7 +1,7 @@
 import createError from 'http-errors'
 import shell from 'shelljs'
 
-import { tryExec } from './lib/try-exec'
+import { tryExec } from '@liquid-labs/shell-toolkit'
 
 const KNOWN_ORIGINS = ['origin', 'upstream']
 const KNOWN_MAINS = ['main', 'master']
