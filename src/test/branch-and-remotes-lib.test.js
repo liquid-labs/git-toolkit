@@ -25,7 +25,7 @@ describe('hasBranch', () => {
     ['repo_a', 'bar', true],
     ['repo_a', 'foo', false]
   ])("'%s' has branch '%s' => %p", (repo, branch, present) =>
-    expect(hasBranch({ branch, projectPath: fsPath.join('test-staging', 'data', repo) })).toBe(present))
+    expect(hasBranch({ branch, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
 })
 
 describe('hasRemote', () => {
@@ -36,5 +36,5 @@ describe('hasRemote', () => {
     ['repo_a_clone_2', 'upstream', true],
     ['repo_a_clone_2', 'coworker', true]
   ])("'%s' has remote '%s' => %p", (repo, remote, present) =>
-    expect(hasRemote({ remote, projectPath: fsPath.join('test-staging', 'data', repo) })).toBe(present))
+    expect(hasRemote({ remote, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
 })

@@ -71,12 +71,12 @@ const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + 
 
 const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerCase()
 
-export { 
-  branchBaseName, 
-  determineCurrentBranch, 
-  determineOriginAndMain, 
+export {
+  branchBaseName,
+  determineCurrentBranch,
+  determineOriginAndMain,
   hasBranch,
   hasRemote,
-  releaseBranchName, 
-  workBranchName 
+  releaseBranchName,
+  workBranchName
 }
