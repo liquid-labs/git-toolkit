@@ -75,6 +75,13 @@ const hasRemote = ({ projectPath, remote, reporter, urlMatch }) => {
 
 const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
 
+const verifyIsOnBranch = ({ branch, projectPath, reporter }) => {
+  const currBranch = determineCurrentBranch({ projectPath, reporter })
+  if (currBranch !== branch) {
+    throw createError.BadRequest(`Repo at '${projectPath}' not on branch '${branch}' as expected.`)
+  }
+}
+
 const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerCase()
 
 export {
@@ -84,5 +91,6 @@ export {
   hasBranch,
   hasRemote,
   releaseBranchName,
+  verifyIsOnBranch,
   workBranchName
 }
