@@ -4,6 +4,25 @@ import { tryExec } from '@liquid-labs/shell-toolkit'
 
 import { determineOriginAndMain } from './branch-and-remotes-lib'
 
+const verifyBranchInSync = ({ branch, description, projectPath, remote, reporter }) => {
+  if (description !== undefined) description += ' '
+
+  // Update local branch so we can check we're in sync
+  reporter?.push(`Fetching ${remote} ${branch}...`)
+  tryExec(`cd '${projectPath}' && git fetch -q ${remote} ${branch}`,
+    { msg : `Could not update ${description}branch ${remote}/${branch}.` })
+
+  reporter?.push(`Checking local and remote versions...`)
+  const originHead = tryExec(`cd '${projectPath}' && git rev-parse ${remote}/${branch}`,
+    { msg : `Could not determnie version for ${description}branch ${remote}/${branch} HEAD.` })
+  const localHead = tryExec(`cd '${projectPath}' && git rev-parse ${branch}`,
+    { msg : `Could not determnie version for local ${description}branch ${branch} HEAD.` })
+
+  if (originHead.stdout !== localHead.stdout) {
+    throw createError.BadRequest(`Local and ${remote} ${branch} ${description}branches are not in sync. Try:\n\ngit fetch ${remote} ${branch} \\\n  && git merge ${remote}/${branch}\\\n  && git push ${remote} ${branch}`) 
+  }
+}
+
 /**
  * Verifies the current branch is clean.
  */
@@ -17,17 +36,7 @@ const verifyClean = ({ projectPath, reporter }) => {
 const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
   const [originRemote, mainBranch] = determineOriginAndMain({ projectPath })
 
-  // Update main branch so we can check we're in sync
-  reporter?.push(`Checking ${originRemote} HEAD is up-to-date...`)
-  tryExec(`cd '${projectPath}' && git fetch -q ${originRemote} ${mainBranch}`,
-    { msg : `Could not update ${originRemote}/${mainBranch}.` })
-
-  const originHead = tryExec(`cd '${projectPath}' && git rev-parse ${originRemote}/${mainBranch}`,
-    { msg : `Could not determnie version for ${originRemote}/${mainBranch}.` })
-  const localHead = tryExec(`cd '${projectPath}' && git rev-parse ${mainBranch}`,
-    { msg : `Could not determnie version for ${mainBranch}.` })
-
-  if (originHead.stdout !== localHead.stdout) { throw createError.BadRequest(`Local and ${originRemote} '${mainBranch} are not in sync. Try:\n\ngit fetch ${originRemote} ${mainBranch} \\\n  && git merge ${originRemote}/${mainBranch}\\\n  && git push ${originRemote} ${mainBranch}`) }
+  verifyBranchInSync({ branch: mainBranch, description: 'main', projectPath, remote: originRemote, reporter })
 }
 
 /**
@@ -58,4 +67,4 @@ const verifyReadyForRelease = ({
   else throw createError.BadRequest("You must define a 'qa' script to be run prior to release.")
 }
 
-export { verifyClean, verifyMainBranchUpToDate, verifyReadyForRelease }
+export { verifyBranchInSync, verifyClean, verifyMainBranchUpToDate, verifyReadyForRelease }
