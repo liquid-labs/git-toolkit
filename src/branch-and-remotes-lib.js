@@ -76,9 +76,13 @@ const hasRemote = ({ projectPath, remote, reporter, urlMatch }) => {
 const releaseBranchName = ({ releaseVersion }) => 'release-' + releaseVersion + '-' + branchBaseName()
 
 const verifyIsOnBranch = ({ branch, projectPath, reporter }) => {
-  const currBranch = determineCurrentBranch({ projectPath, reporter })
+  const currBranch = determineCurrentBranch({ projectPath })
   if (currBranch !== branch) {
+    reporter?.push(`Not on required branch <em>${branch}<rst> (on <bold>${currBranch}<rst>).`)
     throw createError.BadRequest(`Repo at '${projectPath}' not on branch '${branch}' as expected.`)
+  }
+  else {
+    reporter?.push(`Verified on branch <em>${branch}<rst>`)
   }
 }
 
