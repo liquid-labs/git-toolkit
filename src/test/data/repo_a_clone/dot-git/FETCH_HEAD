@@ -1,2 +1,5 @@
-003167c46d2f513909454f6930911b3abfb0863d	not-for-merge	branch 'bar' of /Users/zane/playground/liquid-labs/git-toolkit/src/test/data/./repo_a
-003167c46d2f513909454f6930911b3abfb0863d	not-for-merge	branch 'main' of /Users/zane/playground/liquid-labs/git-toolkit/src/test/data/./repo_a
+fe7576a7e4db6eff2ddd4fe43a5bbaab88c32407		branch 'main' of ../repo_a
+003167c46d2f513909454f6930911b3abfb0863d	not-for-merge	branch 'bar' of ../repo_a
+003167c46d2f513909454f6930911b3abfb0863d	not-for-merge	branch 'local-ahead' of ../repo_a
+aa08833bae6579dce954467e0ed0c00c89283a6b	not-for-merge	branch 'local-behind' of ../repo_a
+44f5ef97e777a1ddbbc28ee2f117a04d3ff5253c	not-for-merge	branch 'local-mixed' of ../repo_a
