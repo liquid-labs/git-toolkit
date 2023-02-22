@@ -29,7 +29,8 @@ describe('hasBranch', () => {
   test.each([
     ['repo_a', 'main', true],
     ['repo_a', 'bar', true],
-    ['repo_a', 'foo', false]
+    ['repo_a', 'foo', false],
+    ['repo_a_clone', 'origin/main', true]
   ])("'%s' has branch '%s' => %p", (repo, branch, present) =>
     expect(hasBranch({ branch, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
 })

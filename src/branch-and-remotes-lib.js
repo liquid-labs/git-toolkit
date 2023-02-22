@@ -57,7 +57,7 @@ const determineOriginAndMain = ({ projectPath, reporter }) => {
 
 const hasBranch = ({ branch, projectPath, reporter }) => {
   reporter?.push(`Checking for local branch '${branch}'...`)
-  const result = tryExec(`cd '${projectPath}' && git branch | grep -E '^[*]?\\s*${branch}\\s*$' || true`)
+  const result = tryExec(`cd '${projectPath}' && git branch -a | grep -E '^[*]?\\s*(?:remotes/)?${branch}\\s*$' || true`)
   return result.stdout.trim().length > 0
 }
 
