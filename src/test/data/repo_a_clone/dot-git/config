@@ -11,3 +11,12 @@
 [branch "main"]
 	remote = origin
 	merge = refs/heads/main
+[branch "local-ahead"]
+	remote = origin
+	merge = refs/heads/local-ahead
+[branch "local-behind"]
+	remote = origin
+	merge = refs/heads/local-behind
+[branch "local-mixed"]
+	remote = origin
+	merge = refs/heads/local-mixed

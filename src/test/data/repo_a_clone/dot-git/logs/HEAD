@@ -1,3 +1,19 @@
 0000000000000000000000000000000000000000 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1675881669 -0600	clone: from /Users/zane/playground/liquid-labs/git-toolkit/src/test/data/./repo_a
 003167c46d2f513909454f6930911b3abfb0863d 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1675881700 -0600	checkout: moving from main to not-main
 003167c46d2f513909454f6930911b3abfb0863d fe7576a7e4db6eff2ddd4fe43a5bbaab88c32407 Zane Rockenbaugh <zane@liquid-labs.com> 1675972344 -0600	commit: ignore 'dot-git' in live repos
+fe7576a7e4db6eff2ddd4fe43a5bbaab88c32407 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677102463 -0600	checkout: moving from not-main to main
+003167c46d2f513909454f6930911b3abfb0863d 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677102766 -0600	checkout: moving from main to local-ahead
+003167c46d2f513909454f6930911b3abfb0863d f31e8f0689f040f77888751cff154e3d4c7c3a06 Zane Rockenbaugh <zane@liquid-labs.com> 1677102813 -0600	commit: added bar to local branch only
+f31e8f0689f040f77888751cff154e3d4c7c3a06 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677102940 -0600	checkout: moving from local-ahead to main
+003167c46d2f513909454f6930911b3abfb0863d 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103129 -0600	checkout: moving from main to main
+003167c46d2f513909454f6930911b3abfb0863d 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103137 -0600	checkout: moving from main to local-behind
+003167c46d2f513909454f6930911b3abfb0863d aa08833bae6579dce954467e0ed0c00c89283a6b Zane Rockenbaugh <zane@liquid-labs.com> 1677103184 -0600	commit: added file for remote branch
+aa08833bae6579dce954467e0ed0c00c89283a6b 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103190 -0600	reset: moving to HEAD^
+003167c46d2f513909454f6930911b3abfb0863d 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103334 -0600	checkout: moving from local-behind to main
+003167c46d2f513909454f6930911b3abfb0863d 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103380 -0600	checkout: moving from main to local-mixed
+003167c46d2f513909454f6930911b3abfb0863d 44f5ef97e777a1ddbbc28ee2f117a04d3ff5253c Zane Rockenbaugh <zane@liquid-labs.com> 1677103424 -0600	commit: a file for the remote
+44f5ef97e777a1ddbbc28ee2f117a04d3ff5253c 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103430 -0600	reset: moving to HEAD^
+003167c46d2f513909454f6930911b3abfb0863d c233a3c1c9e5e3692f691676598eb0bd6b7f96ee Zane Rockenbaugh <zane@liquid-labs.com> 1677103448 -0600	commit: a file for the local branch
+c233a3c1c9e5e3692f691676598eb0bd6b7f96ee fe7576a7e4db6eff2ddd4fe43a5bbaab88c32407 Zane Rockenbaugh <zane@liquid-labs.com> 1677103462 -0600	checkout: moving from local-mixed to not-main
+fe7576a7e4db6eff2ddd4fe43a5bbaab88c32407 003167c46d2f513909454f6930911b3abfb0863d Zane Rockenbaugh <zane@liquid-labs.com> 1677103499 -0600	checkout: moving from not-main to main
+003167c46d2f513909454f6930911b3abfb0863d fe7576a7e4db6eff2ddd4fe43a5bbaab88c32407 Zane Rockenbaugh <zane@liquid-labs.com> 1677103520 -0600	checkout: moving from main to not-main

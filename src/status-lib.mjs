@@ -2,7 +2,35 @@ import createError from 'http-errors'
 
 import { tryExec } from '@liquid-labs/shell-toolkit'
 
-import { determineOriginAndMain } from './branch-and-remotes-lib'
+import { determineOriginAndMain, hasBranch } from './branch-and-remotes-lib'
+
+const compareLocalAndRemoteBranch = ({ branch, remote, projectPath, reporter }) => {
+  if (!hasBranch({ branch, projectPath, reporter }))
+    throw createError.NotFound(`No such local branch '${branch}' found.`)
+
+  const remoteBranch = `${remote}/${branch}`
+  if (!hasBranch({ branch: remoteBranch, projectPath, reporter }))
+    throw createError.NotFound(`No such remote branch '${remoteBranch}' found.`)
+
+  const lcrResult = tryExec(`cd '${projectPath}' && git branch -a --contains ${remote}/${branch} ${branch}`)
+  const localContainsRemote = lcrResult.stdout.length > 0
+
+  const rclResult = tryExec(`cd '${projectPath}' && git branch -a --contains ${branch} ${remote}/${branch}`)
+  const remoteContainsLocal = rclResult.stdout.length > 0
+
+  if (localContainsRemote === false && remoteContainsLocal === false) {
+    return 'mixed'
+  }
+  else if (localContainsRemote === true && remoteContainsLocal === true) {
+    return 'synced'
+  }
+  else if (localContainsRemote === true) { // && remoteContainsLocal === false
+    return 'local ahead'
+  }
+  else { // localContainsRemote === false && remoteContainsLocal === true
+    return 'local behind'
+  }
+}
 
 const verifyBranchInSync = ({ branch, description, projectPath, remote, reporter }) => {
   if (description !== undefined) description += ' '
@@ -39,4 +67,4 @@ const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
   verifyBranchInSync({ branch: mainBranch, description: 'main', projectPath, remote: originRemote, reporter })
 }
 
-export { verifyBranchInSync, verifyClean, verifyMainBranchUpToDate }
+export { compareLocalAndRemoteBranch, verifyBranchInSync, verifyClean, verifyMainBranchUpToDate }
