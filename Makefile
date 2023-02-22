@@ -3,6 +3,7 @@ ERROR:=$(error This version of make does not support required 'grouped-target' (
 endif
 
 .DELETE_ON_ERROR:
+.PRECIOUS: last-test.txt last-lint.txt
 .PHONY: all build clean-test lint lint-fix qa test test-repos-live test-repos-commitable
 
 default: build
@@ -39,7 +40,7 @@ $(TEST_DATA_BUILT_FILES) &: $(TEST_DATA_FILES)
 	mkdir -p $(TEST_DATA_BUILT_SRC)
 	cp -rf $(TEST_DATA_SRC)/* $(TEST_DATA_BUILT_SRC)
 	# we 'cp' so that when make compares the test-staging repos to the src repos, it doesn't see a lot of missing files
-	for DOT_GIT in $$(find $(TEST_DATA_BUILT_SRC) -name 'dot-git'); do cp -r $$DOT_GIT $$(dirname $$DOT_GIT)/.git; done
+	for DOT_GIT in $$(find $(TEST_DATA_BUILT_SRC) -name 'dot-git'); do mv $$DOT_GIT $$(dirname $$DOT_GIT)/.git; done
 
 $(TEST_BUILT_FILES)&: $(ALL_SRC_FILES)
 	JS_SRC=$(LIB_SRC) $(CATALYST_SCRIPTS) pretest

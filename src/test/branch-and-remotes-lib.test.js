@@ -1,12 +1,12 @@
 /* globals describe expect test */
 import * as fsPath from 'node:path'
 
-import { 
-  determineCurrentBranch, 
-  determineOriginAndMain, 
-  hasBranch, 
-  hasRemote, 
-  verifyIsOnBranch 
+import {
+  determineCurrentBranch,
+  determineOriginAndMain,
+  hasBranch,
+  hasRemote,
+  verifyIsOnBranch
 } from '../branch-and-remotes-lib'
 
 describe('determineCurrentBranch', () => {
@@ -29,7 +29,8 @@ describe('hasBranch', () => {
   test.each([
     ['repo_a', 'main', true],
     ['repo_a', 'bar', true],
-    ['repo_a', 'foo', false]
+    ['repo_a', 'foo', false],
+    ['repo_a_clone', 'origin/main', true]
   ])("'%s' has branch '%s' => %p", (repo, branch, present) =>
     expect(hasBranch({ branch, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
 })
@@ -55,18 +56,18 @@ describe('hasRemote', () => {
 })
 
 describe('verifyIsOnBranch', () => {
-   test.each([
+  test.each([
     ['repo_a', 'main', true],
     ['repo_a', 'bar', false],
     ['repo_a', 'not-a-branch', false],
     ['repo_b', 'work-branch', true]
   ])("'%s' is on branch '%s': %s", (repo, branch, result) => {
-    const projectPath = fsPath.join('test-staging', 'data', repo) 
+    const projectPath = fsPath.join('test-staging', 'data', repo)
     if (result === true) {
       expect(() => verifyIsOnBranch({ branch, projectPath })).not.toThrow()
     }
     else {
-     expect(() => verifyIsOnBranch({ branch, projectPath })).toThrow(/not on branch/) 
+      expect(() => verifyIsOnBranch({ branch, projectPath })).toThrow(/not on branch/)
     }
   })
 })

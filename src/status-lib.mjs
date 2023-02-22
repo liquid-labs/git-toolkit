@@ -2,7 +2,33 @@ import createError from 'http-errors'
 
 import { tryExec } from '@liquid-labs/shell-toolkit'
 
-import { determineOriginAndMain } from './branch-and-remotes-lib'
+import { determineOriginAndMain, hasBranch } from './branch-and-remotes-lib'
+
+const compareLocalAndRemoteBranch = ({ branch, remote, projectPath, reporter }) => {
+  if (!hasBranch({ branch, projectPath, reporter })) { throw createError.NotFound(`No such local branch '${branch}' found.`) }
+
+  const remoteBranch = `${remote}/${branch}`
+  if (!hasBranch({ branch : remoteBranch, projectPath, reporter })) { throw createError.NotFound(`No such remote branch '${remoteBranch}' found.`) }
+
+  const lcrResult = tryExec(`cd '${projectPath}' && git branch -a --contains ${remote}/${branch} ${branch}`)
+  const localContainsRemote = lcrResult.stdout.length > 0
+
+  const rclResult = tryExec(`cd '${projectPath}' && git branch -a --contains ${branch} ${remote}/${branch}`)
+  const remoteContainsLocal = rclResult.stdout.length > 0
+
+  if (localContainsRemote === false && remoteContainsLocal === false) {
+    return 'mixed'
+  }
+  else if (localContainsRemote === true && remoteContainsLocal === true) {
+    return 'synced'
+  }
+  else if (localContainsRemote === true) { // && remoteContainsLocal === false
+    return 'local ahead'
+  }
+  else { // localContainsRemote === false && remoteContainsLocal === true
+    return 'local behind'
+  }
+}
 
 const verifyBranchInSync = ({ branch, description, projectPath, remote, reporter }) => {
   if (description !== undefined) description += ' '
@@ -12,14 +38,14 @@ const verifyBranchInSync = ({ branch, description, projectPath, remote, reporter
   tryExec(`cd '${projectPath}' && git fetch -q ${remote} ${branch}`,
     { msg : `Could not update ${description}branch ${remote}/${branch}.` })
 
-  reporter?.push(`Checking local and remote versions...`)
+  reporter?.push('Checking local and remote versions...')
   const originHead = tryExec(`cd '${projectPath}' && git rev-parse ${remote}/${branch}`,
     { msg : `Could not determnie version for ${description}branch ${remote}/${branch} HEAD.` })
   const localHead = tryExec(`cd '${projectPath}' && git rev-parse ${branch}`,
     { msg : `Could not determnie version for local ${description}branch ${branch} HEAD.` })
 
   if (originHead.stdout !== localHead.stdout) {
-    throw createError.BadRequest(`Local and ${remote} ${branch} ${description}branches are not in sync. Try:\n\ngit fetch ${remote} ${branch} \\\n  && git merge ${remote}/${branch}\\\n  && git push ${remote} ${branch}`) 
+    throw createError.BadRequest(`Local and ${remote} ${branch} ${description}branches are not in sync. Try:\n\ngit fetch ${remote} ${branch} \\\n  && git merge ${remote}/${branch}\\\n  && git push ${remote} ${branch}`)
   }
 }
 
@@ -36,7 +62,7 @@ const verifyClean = ({ projectPath, reporter }) => {
 const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
   const [originRemote, mainBranch] = determineOriginAndMain({ projectPath })
 
-  verifyBranchInSync({ branch: mainBranch, description: 'main', projectPath, remote: originRemote, reporter })
+  verifyBranchInSync({ branch : mainBranch, description : 'main', projectPath, remote : originRemote, reporter })
 }
 
-export { verifyBranchInSync, verifyClean, verifyMainBranchUpToDate }
+export { compareLocalAndRemoteBranch, verifyBranchInSync, verifyClean, verifyMainBranchUpToDate }
