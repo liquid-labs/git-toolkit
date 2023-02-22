@@ -39,32 +39,4 @@ const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
   verifyBranchInSync({ branch: mainBranch, description: 'main', projectPath, remote: originRemote, reporter })
 }
 
-/**
- * Verifies that the repo is ready for release by verifyirg we are on the main or release branch, the repo is clean,
- * the main branch is up to date with the origin remote and vice-a-versa, and there is a package 'qa' script that
- * passes.
- */
-const verifyReadyForRelease = ({
-  currentBranch,
-  mainBranch,
-  originRemote,
-  packageSpec,
-  projectPath,
-  releaseBranch,
-  reporter
-}) => {
-  reporter?.push('Checking current branch valid...')
-  if (currentBranch === releaseBranch) reporter.push(`  already on release branch ${releaseBranch}.`)
-  else if (currentBranch !== mainBranch) { throw createError.BadRequest(`Release branch can only be cut from main branch '${mainBranch}'; current branch: '${currentBranch}'.`) }
-
-  verifyClean({ projectPath, reporter })
-  verifyMainBranchUpToDate({ projectPath, reporter })
-
-  reporter?.push("Checking for and running 'qa' script...")
-  if ('qa' in packageSpec.scripts) {
-    tryExec(`cd '${projectPath}' && npm run qa`, { httpStatus : 400, msg : 'Project must pass QA prior to release.' })
-  }
-  else throw createError.BadRequest("You must define a 'qa' script to be run prior to release.")
-}
-
-export { verifyBranchInSync, verifyClean, verifyMainBranchUpToDate, verifyReadyForRelease }
+export { verifyBranchInSync, verifyClean, verifyMainBranchUpToDate }
