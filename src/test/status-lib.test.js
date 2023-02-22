@@ -10,7 +10,7 @@ describe('compareLocalAndRemoteBranch', () => {
     ['repo_a_clone', 'local-behind', 'local behind']
   ])('%s branch %s is %s re remote branch', (repo, branch, expectedResult) => {
     const projectPath = fsPath.join('test-staging', 'data', repo)
-    expect(compareLocalAndRemoteBranch({ branch, remote: 'origin', projectPath })).toBe(expectedResult)
+    expect(compareLocalAndRemoteBranch({ branch, remote : 'origin', projectPath })).toBe(expectedResult)
   })
 })
 
