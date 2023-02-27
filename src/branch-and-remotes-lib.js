@@ -25,9 +25,11 @@ const determineCurrentBranch = ({ projectPath, reporter }) => {
   return branchResult.stdout.trim()
 }
 
-const determineOriginAndMain = ({ projectPath, reporter }) => {
-  reporter?.push('Fetching latest origin data...')
-  tryExec(`cd ${projectPath} && git fetch -p`)
+const determineOriginAndMain = ({ noFetch = false, projectPath, reporter }) => {
+  if (noFetch !== true) {
+    reporter?.push('Fetching latest origin data...')
+    tryExec(`cd ${projectPath} && git fetch -p`)
+  }
 
   reporter?.push('Checking remote branches...')
   const remoteBranchQuery = tryExec(`cd ${projectPath} && git branch -r`, { msg : 'Could not list remote branches.' })
