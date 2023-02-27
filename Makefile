@@ -17,7 +17,7 @@ ALL_SRC_FILES:=$(shell find $(LIB_SRC) \( -name "*.js" -o -name "*.mjs" \))
 TEST_STAGING=test-staging
 TEST_SRC_FILES:=$(shell find $(LIB_SRC) -name "*.js")
 TEST_BUILT_FILES:=$(patsubst $(LIB_SRC)/%, $(TEST_STAGING)/%, $(TEST_SRC_FILES))
-LIBRARY:=dist/liq-projects.js
+LIBRARY:=dist/git-toolkit.js
 
 TEST_DATA_SRC:=src/test/data
 TEST_DATA_BUILT_SRC=$(TEST_STAGING)/data
