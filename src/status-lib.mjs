@@ -35,7 +35,8 @@ const determineIfUncommittedChanges = ({ projectPath, reporter }) => {
   // will exit with 1 if both these commands exit with 1 normally if there are changes
   tryExec(`cd '${projectPath}' && git update-index --refresh`, { noThrow : true })
   const hasChanges =
-    tryExec(`cd '${projectPath}' && git status --porcelain=v1 | grep -E '^A'`, { noThrow : true }).stdout.length > 0
+    tryExec(`cd '${projectPath}' && git status --porcelain=v1 | grep -E '^(A|D|M)'`, { noThrow : true })
+      .stdout.length > 0
 
   return hasChanges
 }
@@ -45,7 +46,7 @@ const determineIfUnstagedChanges = ({ projectPath, reporter }) => {
   // will exit with 1 if both these commands exit with 1 normally if there are changes
   tryExec(`cd '${projectPath}' && git update-index -q --ignore-submodules --refresh`, { noThrow : true })
   const hasChanges =
-    tryExec(`cd '${projectPath}' && git status --porcelain=v1 | grep -E '^[?]{2}'`, { noThrow : true }).stdout.length > 0
+    tryExec(`cd '${projectPath}' && git status --porcelain=v1 | grep -E '^([?]{2}| D| M)'`, { noThrow : true }).stdout.length > 0
 
   return hasChanges
 }
