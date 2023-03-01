@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/git-toolkit",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "Toolkit of git-based tools to examine git repositories.",
   "main": "dist/git-toolkit.js",
   "files": [
