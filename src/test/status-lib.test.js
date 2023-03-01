@@ -1,11 +1,11 @@
 /* globals describe expect test */
 import * as fsPath from 'node:path'
 
-import { 
+import {
   compareLocalAndRemoteBranch,
-  determineIfUncommittedChanges, 
-  determineIfUnstagedChanges, 
-  verifyClean 
+  determineIfUncommittedChanges,
+  determineIfUnstagedChanges,
+  verifyClean
 } from '../status-lib'
 
 describe('compareLocalAndRemoteBranch', () => {
@@ -23,7 +23,7 @@ describe('determineIfUncommittedChanges', () => {
   test.each([
     ['repo_a', false],
     ['repo_d-non-staged', false],
-    ['repo_e-uncommitted', true],
+    ['repo_e-uncommitted', true]
   ])('%s has uncommitted changes -> %p', (repo, expectedResult) => {
     const projectPath = fsPath.join('test-staging', 'data', repo)
     expect(determineIfUncommittedChanges({ projectPath })).toBe(expectedResult)
@@ -34,7 +34,7 @@ describe('determineIfUnstagedChanges', () => {
   test.each([
     ['repo_a', false],
     ['repo_d-non-staged', true],
-    ['repo_e-uncommitted', false],
+    ['repo_e-uncommitted', false]
   ])('%s has non-staged changes -> %p', (repo, expectedResult) => {
     const projectPath = fsPath.join('test-staging', 'data', repo)
     expect(determineIfUnstagedChanges({ projectPath })).toBe(expectedResult)
