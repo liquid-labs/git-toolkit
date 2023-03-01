@@ -30,6 +30,26 @@ const compareLocalAndRemoteBranch = ({ branch, remote, projectPath, reporter }) 
   }
 }
 
+const determineIfUncommittedChanges = ({ projectPath, reporter }) => {
+  reporter?.push(`Checking for uncommitted changes at ${projectPath}...`)
+  // will exit with 1 if both these commands exit with 1 normally if there are changes
+  tryExec(`cd '${projectPath}' && git update-index --refresh`, { noThrow : true })
+  const hasChanges =
+    tryExec(`cd '${projectPath}' && git status --porcelain=v1 | grep -E '^A'`, { noThrow : true }).stdout.length > 0
+
+  return hasChanges
+}
+
+const determineIfUnstagedChanges = ({ projectPath, reporter }) => {
+  reporter?.push(`Checking for non-staged changes at ${projectPath}...`)
+  // will exit with 1 if both these commands exit with 1 normally if there are changes
+  tryExec(`cd '${projectPath}' && git update-index -q --ignore-submodules --refresh`, { noThrow : true })
+  const hasChanges =
+    tryExec(`cd '${projectPath}' && git status --porcelain=v1 | grep -E '^[?]{2}'`, { noThrow : true }).stdout.length > 0
+
+  return hasChanges
+}
+
 const verifyBranchInSync = ({ branch, description, projectPath, remote, reporter }) => {
   if (description !== undefined) description += ' '
 
@@ -65,4 +85,11 @@ const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
   verifyBranchInSync({ branch : mainBranch, description : 'main', projectPath, remote : originRemote, reporter })
 }
 
-export { compareLocalAndRemoteBranch, verifyBranchInSync, verifyClean, verifyMainBranchUpToDate }
+export {
+  compareLocalAndRemoteBranch,
+  determineIfUncommittedChanges,
+  determineIfUnstagedChanges,
+  verifyBranchInSync,
+  verifyClean,
+  verifyMainBranchUpToDate
+}
