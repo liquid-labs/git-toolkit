@@ -3,6 +3,7 @@ import * as fsPath from 'node:path'
 
 import {
   determineCurrentBranch,
+  determineLocalMain,
   determineOriginAndMain,
   hasBranch,
   hasRemote,
@@ -15,6 +16,11 @@ describe('determineCurrentBranch', () => {
     ['repo_b', 'work-branch']
   ])("'%s' is on branch '%s'", (repo, branch) =>
     expect(determineCurrentBranch({ projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(branch))
+})
+
+describe('determineLocalMain', () => {
+  test.each([['repo_a', 'main']])("'%s' -> has main branch '%s'", (repo, main) =>
+    expect(determineLocalMain({ projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(main))
 })
 
 describe('determineOriginAndMain', () => {

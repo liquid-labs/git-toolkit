@@ -25,6 +25,25 @@ const determineCurrentBranch = ({ projectPath, reporter }) => {
   return branchResult.stdout.trim()
 }
 
+const determineLocalMain = ({ projectPath, reporter }) => {
+  const branchQuery = tryExec(`cd ${projectPath} && git branch`, { msg : 'Could not list branches.' }).stdout
+  const branches = branchQuery.split('\n').map((r) => r.trim().replace(/^\s*[*]\s*/, ''))
+
+  let main
+  for (const branch of branches) {
+    if (main === undefined && KNOWN_MAINS.includes(branch)) {
+      main = branch
+    }
+    else if (main !== undefined && main !== branch && KNOWN_MAINS.includes(branch)) {
+      throw createError(`Found multiple possible origin branches: ${main} + ${branch}`)
+    }
+  }
+
+  reporter?.push(`Determined local main branch: ${main}.`)
+
+  return main
+}
+
 const determineOriginAndMain = ({ noFetch = false, projectPath, reporter }) => {
   if (noFetch !== true) {
     reporter?.push('Fetching latest origin data...')
@@ -41,14 +60,14 @@ const determineOriginAndMain = ({ noFetch = false, projectPath, reporter }) => {
       origin = remote
     }
     else if (origin !== undefined && origin !== remote && KNOWN_ORIGINS.includes(remote)) {
-      throw createError(`Found multiple possible origin remotes: ${origin} + ${remote}`)
+      throw createError.BadRequest(`Found multiple possible origin remotes: ${origin} + ${remote}`)
     }
 
     if (main === undefined && KNOWN_MAINS.includes(branch) && KNOWN_ORIGINS.includes(remote)) {
       main = branch
     }
     else if (main !== undefined && main !== branch && KNOWN_MAINS.includes(branch) && KNOWN_ORIGINS.includes(remote)) {
-      throw createError(`Found multiple possible origin branches: ${main} + ${branch}`)
+      throw createError.BadRequest(`Found multiple possible origin branches: ${main} + ${branch}`)
     }
   }
 
@@ -93,6 +112,7 @@ const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerC
 export {
   branchBaseName,
   determineCurrentBranch,
+  determineLocalMain,
   determineOriginAndMain,
   hasBranch,
   hasRemote,
