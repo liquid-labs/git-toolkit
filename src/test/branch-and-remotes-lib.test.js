@@ -20,7 +20,7 @@ describe('determineCurrentBranch', () => {
 
 describe('determineLocalMain', () => {
   test.each([['repo_a', 'main']])("'%s' -> has main branch '%s'", (repo, main) =>
-    expect(determineLocalMain({ projectPath: fsPath.join('test-staging', 'data', repo) })).toBe(main))
+    expect(determineLocalMain({ projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(main))
 })
 
 describe('determineOriginAndMain', () => {
