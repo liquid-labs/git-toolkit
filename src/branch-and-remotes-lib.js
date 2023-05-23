@@ -107,6 +107,8 @@ const verifyIsOnBranch = ({ branch, branches, projectPath, reporter }) => {
   else {
     reporter?.push(`Verified on branch <em>${currBranch}<rst>`)
   }
+
+  return currBranch
 }
 
 const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerCase()

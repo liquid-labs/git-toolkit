@@ -76,4 +76,11 @@ describe('verifyIsOnBranch', () => {
       expect(() => verifyIsOnBranch({ branch, projectPath })).toThrow(/not on branch/)
     }
   })
+
+  test("works with 'branches'", () => {
+    const projectPath = fsPath.join('test-staging', 'data', 'repo_b')
+    let currBranch
+    expect(() => { currBranch = verifyIsOnBranch({ branches: [ 'main', 'work-branch' ], projectPath })}).not.toThrow()
+    expect(currBranch).toBe('work-branch')
+  })
 })
