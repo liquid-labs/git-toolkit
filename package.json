@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@liquid-labs/regex-repo": "^1.0.0-alpha.6",
-    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.3",
+    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.6",
     "shelljs": "^0.8.5"
   }
 }
