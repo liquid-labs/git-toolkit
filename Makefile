@@ -95,7 +95,7 @@ $(foreach FILE,$(CATALYST_JS_TEST_DATA_BUILT), $(eval $(call COPY_DATA,$(FILE),$
 foo:
 	@echo $(CATALYST_JS_TEST_DATA_BUILT)
 
-.activate-git-repos: $(CATALYST_JS_TEST_DATA_BUILT)
+.activate-git-repos: $(CATALYST_JS_TEST_DATA_SRC) # SRC not BUILT because BUILT changes with tests
 	for DOT_GIT in $$(find $(TEST_STAGING)/test/data -name 'dot-git'); do mv $$DOT_GIT $$(dirname $$DOT_GIT)/.git; done
 	touch .activate-git-repos
 
