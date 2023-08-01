@@ -5,3 +5,4 @@
 /dist
 /test-staging
 /.activate-git-repos
+/.clear-test-data

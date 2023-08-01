@@ -82,8 +82,12 @@ endif
 UNIT_TEST_REPORT:=$(QA)/unit-test.txt
 UNIT_TEST_PASS_MARKER:=$(QA)/.unit-test.passed
 
+.clear-test-data:
+	rm -rf $(TEST_STAGING)
+	touch $@
+
 define COPY_DATA
-$(1): $(2)
+$(1): $(2) .clear-test-data
 	@echo "Copying test data..."
 	@mkdir -p $$(dir $$@)
 	@cp $$< $$@
