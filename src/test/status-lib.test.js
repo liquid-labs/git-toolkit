@@ -14,7 +14,7 @@ describe('compareLocalAndRemoteBranch', () => {
     ['repo_a_clone', 'local-ahead', 'local ahead'],
     ['repo_a_clone', 'local-behind', 'local behind']
   ])('%s branch %s is %s re remote branch', (repo, branch, expectedResult) => {
-    const projectPath = fsPath.join('test-staging', 'data', repo)
+    const projectPath = fsPath.join(__dirname, 'data', repo)
     expect(compareLocalAndRemoteBranch({ branch, remote : 'origin', projectPath })).toBe(expectedResult)
   })
 })
@@ -29,7 +29,7 @@ describe('determineIfUncommittedChanges', () => {
     ['repo_h-uncommitted-delete', true],
     ['repo_i-uncommitted-mod', true]
   ])('%s has uncommitted changes -> %p', (repo, expectedResult) => {
-    const projectPath = fsPath.join('test-staging', 'data', repo)
+    const projectPath = fsPath.join(__dirname, 'data', repo)
     expect(determineIfUncommittedChanges({ projectPath })).toBe(expectedResult)
   })
 })
@@ -44,7 +44,7 @@ describe('determineIfUnstagedChanges', () => {
     ['repo_h-uncommitted-delete', false],
     ['repo_i-uncommitted-mod', false]
   ])('%s has non-staged changes -> %p', (repo, expectedResult) => {
-    const projectPath = fsPath.join('test-staging', 'data', repo)
+    const projectPath = fsPath.join(__dirname, 'data', repo)
     expect(determineIfUnstagedChanges({ projectPath })).toBe(expectedResult)
   })
 })
@@ -54,5 +54,5 @@ describe('verifyClean', () => {
     ['repo_a_clone', 'on not-main branch'],
     ['repo_a_clone_2', 'on main branch']
   ])("'%s' %s is clean", (repo, branch) =>
-    expect(() => verifyClean({ projectPath : fsPath.join('test-staging', 'data', repo) })).not.toThrow())
+    expect(() => verifyClean({ projectPath : fsPath.join(__dirname, 'data', repo) })).not.toThrow())
 })

@@ -15,12 +15,12 @@ describe('determineCurrentBranch', () => {
     ['repo_a', 'main'],
     ['repo_b', 'work-branch']
   ])("'%s' is on branch '%s'", (repo, branch) =>
-    expect(determineCurrentBranch({ projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(branch))
+    expect(determineCurrentBranch({ projectPath : fsPath.join(__dirname, 'data', repo) })).toBe(branch))
 })
 
 describe('determineLocalMain', () => {
   test.each([['repo_a', 'main']])("'%s' -> has main branch '%s'", (repo, main) =>
-    expect(determineLocalMain({ projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(main))
+    expect(determineLocalMain({ projectPath : fsPath.join(__dirname, 'data', repo) })).toBe(main))
 })
 
 describe('determineOriginAndMain', () => {
@@ -28,7 +28,7 @@ describe('determineOriginAndMain', () => {
     ['repo_a_clone', 'origin', 'main'],
     ['repo_a_clone_2', 'upstream', 'main']
   ])("'%s' has origin / main '%s' / '%s'", (repo, origin, main) =>
-    expect(determineOriginAndMain({ projectPath : fsPath.join('test-staging', 'data', repo) })).toEqual([origin, main]))
+    expect(determineOriginAndMain({ projectPath : fsPath.join(__dirname, 'data', repo) })).toEqual([origin, main]))
 })
 
 describe('hasBranch', () => {
@@ -38,7 +38,7 @@ describe('hasBranch', () => {
     ['repo_a', 'foo', false],
     ['repo_a_clone', 'origin/main', true]
   ])("'%s' has branch '%s' => %p", (repo, branch, present) =>
-    expect(hasBranch({ branch, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
+    expect(hasBranch({ branch, projectPath : fsPath.join(__dirname, 'data', repo) })).toBe(present))
 })
 
 describe('hasRemote', () => {
@@ -49,7 +49,7 @@ describe('hasRemote', () => {
     ['repo_a_clone_2', 'upstream', true],
     ['repo_a_clone_2', 'coworker', true]
   ])("'%s' has remote '%s' => %p", (repo, remote, present) =>
-    expect(hasRemote({ remote, projectPath : fsPath.join('test-staging', 'data', repo) })).toBe(present))
+    expect(hasRemote({ remote, projectPath : fsPath.join(__dirname, 'data', repo) })).toBe(present))
 
   test.each([
     ['repo_a', 'origin', 'repo_a(?:\\s|$)', false],
@@ -58,7 +58,7 @@ describe('hasRemote', () => {
     ['repo_a_clone_2', 'upstream', 'repo_a(?:\\s|$)', true],
     ['repo_a_clone_2', 'coworker', 'repo_a_clone(?:\\s|$)', true]
   ])("'%s' has remote '%s' with url matching %p => %p", (repo, remote, urlMatch, present) =>
-    expect(hasRemote({ remote, projectPath : fsPath.join('test-staging', 'data', repo), urlMatch })).toBe(present))
+    expect(hasRemote({ remote, projectPath : fsPath.join(__dirname, 'data', repo), urlMatch })).toBe(present))
 })
 
 describe('verifyIsOnBranch', () => {
@@ -68,7 +68,7 @@ describe('verifyIsOnBranch', () => {
     ['repo_a', 'not-a-branch', false],
     ['repo_b', 'work-branch', true]
   ])("'%s' is on branch '%s': %s", (repo, branch, result) => {
-    const projectPath = fsPath.join('test-staging', 'data', repo)
+    const projectPath = fsPath.join(__dirname, 'data', repo)
     if (result === true) {
       expect(() => verifyIsOnBranch({ branch, projectPath })).not.toThrow()
     }
@@ -78,9 +78,9 @@ describe('verifyIsOnBranch', () => {
   })
 
   test("works with 'branches'", () => {
-    const projectPath = fsPath.join('test-staging', 'data', 'repo_b')
+    const projectPath = fsPath.join(__dirname, 'data', 'repo_b')
     let currBranch
-    expect(() => { currBranch = verifyIsOnBranch({ branches: [ 'main', 'work-branch' ], projectPath })}).not.toThrow()
+    expect(() => { currBranch = verifyIsOnBranch({ branches : ['main', 'work-branch'], projectPath }) }).not.toThrow()
     expect(currBranch).toBe('work-branch')
   })
 })
