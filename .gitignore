@@ -1,8 +1,7 @@
+/qa
 /node_modules
 /yalc.lock
 /.yalc
-/coverage
 /dist
-/last-lint.txt
-/last-test.txt
 /test-staging
+/.activate-git-repos
