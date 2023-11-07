@@ -1,0 +1,18 @@
+Test git rev: 942fb0a09e922d90ac56cc97f136b531eb80df0e
+PASS test/status-lib.test.js
+PASS test/branch-and-remotes-lib.test.js
+PASS test/config.test.js
+---------------------------|---------|----------|---------|---------|------------------------
+File                       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s      
+---------------------------|---------|----------|---------|---------|------------------------
+All files                  |   77.84 |    68.75 |   73.91 |   80.68 |                        
+ branch-and-remotes-lib.js |   78.72 |    76.31 |   73.33 |      80 | 10-17,38,63,70,121-135 
+ config.mjs                |     100 |      100 |     100 |     100 |                        
+ status-lib.mjs            |   74.57 |    52.77 |   71.42 |      80 | 20,55-69,93-95         
+---------------------------|---------|----------|---------|---------|------------------------
+
+Test Suites: 3 passed, 3 total
+Tests:       51 passed, 51 total
+Snapshots:   0 total
+Time:        3.668 s, estimated 4 s
+Ran all test suites.
