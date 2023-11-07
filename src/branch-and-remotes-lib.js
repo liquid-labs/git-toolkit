@@ -76,6 +76,12 @@ const determineOriginAndMain = ({ noFetch = false, projectPath, reporter }) => {
   return [origin, main]
 }
 
+const getActiveBranches = ({ projectPath, reporter }) =>
+  tryExec(`cd '${projectPath}' && git branch`).stdout
+    .split('\n')
+    .map((b) => b.replace(/^\* +/, '').trim())
+    .filter((b) => b.length > 0)
+
 const hasBranch = ({ branch, projectPath, reporter }) => {
   reporter?.push(`Checking for local branch '${branch}'...`)
   const result = tryExec(`cd '${projectPath}' && git branch -a | grep -E '^[*]?\\s*(?:remotes/)?${branch}\\s*$' || true`)
@@ -111,6 +117,24 @@ const verifyIsOnBranch = ({ branch, branches, projectPath, reporter }) => {
   return currBranch
 }
 
+const verifyOnlyMainBranch = ({ projectPath, reporter }) => {
+  const branches = getActiveBranches({ projectPath, reporter })
+
+  if (branches.length > 1) {
+    createError.BadRequest(`Found multiple active branches: ${branches.join(', ')} (${projectPath})`)
+  }
+  else if (branches.length === 0) {
+    createError.BadRequest(`Did not find any active branches. (${projectPath})`)
+  }
+
+  const [origin, main] = determineOriginAndMain({ projectPath, reporter })
+  if (main !== branches[0]) {
+    createError.BadRequest(`Found single non-${main} branch: '${branches[0]} (${projectPath})`)
+  }
+
+  return [origin, main]
+}
+
 const workBranchName = ({ primaryIssueID }) => 'work-' + primaryIssueID.toLowerCase()
 
 export {
@@ -118,9 +142,11 @@ export {
   determineCurrentBranch,
   determineLocalMain,
   determineOriginAndMain,
+  getActiveBranches,
   hasBranch,
   hasRemote,
   releaseBranchName,
   verifyIsOnBranch,
+  verifyOnlyMainBranch,
   workBranchName
 }

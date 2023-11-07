@@ -80,6 +80,15 @@ const verifyClean = ({ projectPath, reporter }) => {
   if (cleanResult.stdout.length > 0) { throw createError.BadRequest(`git repo at '${projectPath}' is not clean.`) }
 }
 
+const verifyLocalChangesSaved = ({ branch, origin, projectPath, reporter }) => {
+  if (origin === undefined) {
+    ([origin] = determineOriginAndMain({ projectPath, reporter }))
+  }
+
+  tryExec(`cd '${projectPath}' && git merge-base --is-ancestor ${branch} ${origin}/${branch}`,
+    { msg : `Local ${branch} is not found in ${origin}/${branch}.` })
+}
+
 const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
   const [originRemote, mainBranch] = determineOriginAndMain({ projectPath })
 
@@ -92,5 +101,6 @@ export {
   determineIfUnstagedChanges,
   verifyBranchInSync,
   verifyClean,
+  verifyLocalChangesSaved,
   verifyMainBranchUpToDate
 }
