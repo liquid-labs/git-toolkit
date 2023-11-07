@@ -6,7 +6,7 @@ import {
   determineIfUncommittedChanges,
   determineIfUnstagedChanges,
   verifyClean,
-  verifyLocalChangesSaved,
+  verifyLocalChangesSaved
 } from '../status-lib'
 
 describe('compareLocalAndRemoteBranch', () => {
@@ -63,7 +63,7 @@ describe('verifyLocalChangesSaved', () => {
     ['repo_a_clone', 'main', true],
     ['repo_a_clone', 'local-behind', true],
     ['repo_a_clone', 'local-ahead', false],
-    ['repo_a_clone', 'local-mixed', false],
+    ['repo_a_clone', 'local-mixed', false]
   ])("'%s' branch '%s' is saved: %p", (repo, branch, result) => {
     const projectPath = fsPath.join(__dirname, 'data', repo)
     if (result === true) {

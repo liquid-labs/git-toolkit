@@ -117,7 +117,7 @@ const verifyIsOnBranch = ({ branch, branches, projectPath, reporter }) => {
   return currBranch
 }
 
-const verifyOnlyMainBranch =({ projectPath, reporter }) => {
+const verifyOnlyMainBranch = ({ projectPath, reporter }) => {
   const branches = getActiveBranches({ projectPath, reporter })
 
   if (branches.length > 1) {

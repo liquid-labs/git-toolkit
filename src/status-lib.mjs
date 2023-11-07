@@ -85,8 +85,8 @@ const verifyLocalChangesSaved = ({ branch, origin, projectPath, reporter }) => {
     ([origin] = determineOriginAndMain({ projectPath, reporter }))
   }
 
-  tryExec(`cd '${projectPath}' && git merge-base --is-ancestor ${branch} ${origin}/${branch}`, 
-    { msg: `Local ${branch} is not found in ${origin}/${branch}.`})
+  tryExec(`cd '${projectPath}' && git merge-base --is-ancestor ${branch} ${origin}/${branch}`,
+    { msg : `Local ${branch} is not found in ${origin}/${branch}.` })
 }
 
 const verifyMainBranchUpToDate = ({ projectPath, reporter }) => {
