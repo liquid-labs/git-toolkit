@@ -5,7 +5,8 @@ import {
   compareLocalAndRemoteBranch,
   determineIfUncommittedChanges,
   determineIfUnstagedChanges,
-  verifyClean
+  verifyClean,
+  verifyLocalChangesSaved,
 } from '../status-lib'
 
 describe('compareLocalAndRemoteBranch', () => {
@@ -55,4 +56,21 @@ describe('verifyClean', () => {
     ['repo_a_clone_2', 'on main branch']
   ])("'%s' %s is clean", (repo, branch) =>
     expect(() => verifyClean({ projectPath : fsPath.join(__dirname, 'data', repo) })).not.toThrow())
+})
+
+describe('verifyLocalChangesSaved', () => {
+  test.each([
+    ['repo_a_clone', 'main', true],
+    ['repo_a_clone', 'local-behind', true],
+    ['repo_a_clone', 'local-ahead', false],
+    ['repo_a_clone', 'local-mixed', false],
+  ])("'%s' branch '%s' is saved: %p", (repo, branch, result) => {
+    const projectPath = fsPath.join(__dirname, 'data', repo)
+    if (result === true) {
+      expect(() => verifyLocalChangesSaved({ branch, projectPath })).not.toThrow()
+    }
+    else {
+      expect(() => verifyLocalChangesSaved({ branch, projectPath })).toThrow(/not found in/)
+    }
+  })
 })

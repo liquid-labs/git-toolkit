@@ -5,6 +5,7 @@ import {
   determineCurrentBranch,
   determineLocalMain,
   determineOriginAndMain,
+  getActiveBranches,
   hasBranch,
   hasRemote,
   verifyIsOnBranch
@@ -29,6 +30,15 @@ describe('determineOriginAndMain', () => {
     ['repo_a_clone_2', 'upstream', 'main']
   ])("'%s' has origin / main '%s' / '%s'", (repo, origin, main) =>
     expect(determineOriginAndMain({ projectPath : fsPath.join(__dirname, 'data', repo) })).toEqual([origin, main]))
+})
+
+describe('getActiveBranches', () => {
+  test.each([
+    ['repo_a', ['bar', 'local-ahead', 'local-behind', 'local-mixed', 'main']],
+    ['repo_b', ['main', 'work-branch']],
+    ['repo_c', ['main']]
+  ])("'%s' has branch '%s' => %p", (repo, branches) =>
+    expect(getActiveBranches({ projectPath : fsPath.join(__dirname, 'data', repo) })).toEqual(branches))
 })
 
 describe('hasBranch', () => {
