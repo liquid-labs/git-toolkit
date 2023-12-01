@@ -43,9 +43,9 @@
     "@liquid-labs/catalyst-scripts-node-project": "^1.0.0-alpha.20"
   },
   "dependencies": {
-    "@liquid-labs/regex-repo": "^1.0.0-alpha.6",
-    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.6",
+    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.8",
     "http-errors": "^2.0.0",
+    "regex-repo": "^1.2.1",
     "shelljs": "^0.8.5"
   }
 }
