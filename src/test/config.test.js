@@ -1,5 +1,5 @@
 /* global describe expect test */
-import { email as emailRE } from 'regex-repo'
+import { emailRE } from 'regex-repo'
 
 import { determineAuthorEmail } from '../config'
 
