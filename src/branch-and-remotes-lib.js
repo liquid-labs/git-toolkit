@@ -1,5 +1,4 @@
 import createError from 'http-errors'
-import shell from 'shelljs'
 
 import { tryExec } from '@liquid-labs/shell-toolkit'
 
@@ -11,7 +10,7 @@ const branchBaseName = () => {
   const dateBit = now.getUTCFullYear()
     + ((now.getUTCMonth() + 1) + '').padStart(2, '0')
     + (now.getUTCDate() + '').padStart(2, '0')
-  const userId = shell.exec('git config user.email')
+  const userId = tryExec('git config user.email')
   if (userId.code !== 0) throw createError.InternalServerError('Failed to identify git user for branch name.')
 
   return dateBit + '-' + userId.stdout.trim()
